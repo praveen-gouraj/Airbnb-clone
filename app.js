@@ -1,3 +1,7 @@
+if (process.env.NODE_ENV != "production") {
+  require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
@@ -82,11 +86,21 @@ app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
+// app.use((err, req, res, next) => {
+//   let { statusCode, message = "Something went wrong!" } = err;
+//   res.status(statusCode).render("error.ejs", { message })
+//   // res.status(statusCode).send(message);
+// })
+
 app.use((err, req, res, next) => {
-  let { statusCode, message = "Something went wrong!" } = err;
-  res.status(statusCode).render("error.ejs", { message })
-  // res.status(statusCode).send(message);
-})
+    console.log("===== FULL ERROR =====");
+    console.error(err);
+
+    const statusCode = err.statusCode || 500;
+    const message = err.message || "Something went wrong!";
+
+    res.status(statusCode).render("error.ejs", { message });
+});
 
 app.listen(8080, () => {
   console.log('server is running on port 8080');
