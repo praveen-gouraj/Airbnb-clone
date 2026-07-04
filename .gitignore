@@ -1,3 +1,7 @@
 node_modules/
+<<<<<<< HEAD
 .env
 .DS_Store
+=======
+.env
+>>>>>>> 7df1cfa (latest chenges)
