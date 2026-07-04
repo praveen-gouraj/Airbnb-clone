@@ -27,6 +27,10 @@ main()
     console.log(err);
   })
 
+// async function main() {
+//   await mongoose.connect(MONGODB_URI);
+// }
+
 async function main() {
   await mongoose.connect(MONGODB_URI);
 }
