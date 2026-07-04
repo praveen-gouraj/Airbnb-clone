@@ -1,9 +1,32 @@
 const Listing = require("../models/listing");
 
+// module.exports.index = async (req, res) => {
+//     const allListings = await Listing.find({});
+//     res.render("listings/index.ejs", { allListings });
+// }
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
-    res.render("listings/index.ejs", { allListings });
-}
+    const { search } = req.query;
+
+    let allListings;
+
+    if (search) {
+        allListings = await Listing.find({
+            $or: [
+                { title: { $regex: search, $options: "i" } },
+                { location: { $regex: search, $options: "i" } },
+                { country: { $regex: search, $options: "i" } },
+                { description: { $regex: search, $options: "i" } }
+            ]
+        });
+    } else {
+        allListings = await Listing.find({});
+    }
+
+    res.render("listings/index.ejs", {
+        allListings,
+        search
+    });
+};
 
 module.exports.renderNewForm = (req, res) => {
     res.render("listings/new.ejs");
@@ -16,7 +39,7 @@ module.exports.showListing = async (req, res) => {
         req.flash("error", "Listing not found");
         return res.redirect("/listings");
     }
-    console.log(listing);
+    // console.log(listing);
     res.render("listings/show.ejs", { listing });
 }
 
@@ -38,7 +61,9 @@ module.exports.renderEditForm = async (req, res) => {
         req.flash("error", "Listing not found");
         return res.redirect("/listings");
     }
-    res.render("listings/edit.ejs", { listing });
+    let originalImageUrl = listing.image.url;
+    originalImageUrl = originalImageUrl.replace("/upload", "/upload/w_250");
+    res.render("listings/edit.ejs", { listing, originalImageUrl});
 }
 
 module.exports.updateListing = async (req, res) => {
