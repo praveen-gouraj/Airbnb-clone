@@ -86,11 +86,6 @@ app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
-// app.use((err, req, res, next) => {
-//   let { statusCode, message = "Something went wrong!" } = err;
-//   res.status(statusCode).render("error.ejs", { message })
-//   // res.status(statusCode).send(message);
-// })
 
 app.use((err, req, res, next) => {
     console.log("===== FULL ERROR =====");
