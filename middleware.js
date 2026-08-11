@@ -36,6 +36,7 @@ module.exports.validateListing = (req, res, next) => {
         next();
     }
 }
+
 module.exports.validateReview = (req, res, next) => {
     let { error } = reviewSchema.validate(req.body);
     if (error) {
